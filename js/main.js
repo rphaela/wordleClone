@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessedWordCount = 0;
 
     const keys = document.querySelectorAll(".keyboard-row button");
+    const messageDisplay = document.querySelectorAll(".message-container");
 
     
     function getCurrentWordArr() {
@@ -47,7 +48,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleSubmitWord() {
         const currentWordArr = getCurrentWordArr()
-        if(currentWordArr.length !==5) {
+        if(currentWordArr.length !==5) { 
+            // showMessage("A palavra deve conter cinco letras!");
             window.alert("A palavra deve conter cinco letras!");
         }
 
@@ -69,11 +71,13 @@ document.addEventListener("DOMContentLoaded", () => {
         guessedWordCount += 1;
 
         if(currentWord === word) {
-            window.alert("Parabéns!");
+        // showMessage('Parabéns!');
+        window.alert('Parabéns!');
         }
 
         if(guessedWords.length === 6) {
-                window.alert(`Palavra: ${word}`);
+                // showMessage(`Palavra: ${word}`);
+                window.alert(`Palavra: ${word}`)
         }
 
         guessedWords.push([]);
@@ -93,33 +97,42 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleDeleteLetter(){
-        const currentWordArr = getCurrentWordArr()
-        const removedLetter = currentWordArr.pop()
+        const currentWordArr = getCurrentWordArr();
+        const removedLetter = currentWordArr.pop();
 
-        guessedWords(guessedWords.length - 1) = currentWordArr;
 
-        const lastLetterEl = document.getElementById(String(availableSpace - 1))
+        guessedWords[guessedWords.length - 1] = currentWordArr;
 
-        lastLetterEl.textContent = ''
-        availableSpace = availableSpace - 1
+        const lastLetterEl = document.getElementById(String(availableSpace - 1));
+
+        lastLetterEl.textContent = '';
+        availableSpace = availableSpace - 1;
     }
 
     for (let i = 0; i < keys.length; i++) {
         keys[i].onclick = ({target}) => {
             const letter = target.getAttribute("data-key");
 
-            if(letter ==="enter") {
+            if(letter === "enter") {
                 handleSubmitWord();
                 return;
             }
 
-            if(letter ==="del") {
+            if(letter === "del") {
                 handleDeleteLetter();
                 return;
             }
 
             updateGuessedWords(letter);
         };
+    }
+
+    const showMessage = (message) => {
+        const messageEl = document.createElement('p');
+        messageEl.textContent = message;
+        messageDisplay.append(messageEl);
+        setTimeout(() => messageDisplay.removeChild(messageEl), 2000)
+
     }
 
     });
