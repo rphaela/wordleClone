@@ -1,10 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
     createSquares();
+    getNewWord();
+    
 
     let guessedWords = [[]];
     let availableSpace = 1;
 
-    let word = "dairy";
+    let word;
+
+function getNewWord() {
+        fetch('http://localhost:8000/word')
+        .then((response) => {
+            return response.json();
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+    }
+
+
     let guessedWordCount = 0;
 
     const keys = document.querySelectorAll(".keyboard-row button");
@@ -48,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleSubmitWord() {
         const currentWordArr = getCurrentWordArr()
+
         if(currentWordArr.length !==5) { 
             // showMessage("A palavra deve conter cinco letras!");
             window.alert("A palavra deve conter cinco letras!");
@@ -55,33 +70,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const currentWord = currentWordArr.join("");
 
-        const firstLetterId = guessedWordCount * 5 + 1;
-        const interval = 200;
-        currentWordArr.forEach((letter, index) => {
-            setTimeout(() => {
-                const tileColor = getTileColor(letter, index);
+        fetch(`http://localhost:8000/check/?word=${currentWord}`)
+        .then(response => response.json())
+        .then(json => {
+            console.log(json)
+            if(json === 'Entry guess not found') {
+                window.alert("Palavra não identificada.")
+                return
+            }
+            else {
 
-                const letterId = firstLetterId + index;
-                const letterEl = document.getElementById(letterId);
-                letterEl.classList.add("animate__flipInX"); 
-                letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
-            }, interval * index);
-        });
+                const firstLetterId = guessedWordCount * 5 + 1;
+                const interval = 200;
+                currentWordArr.forEach((letter, index) => {
+                    setTimeout(() => {
+                        const tileColor = getTileColor(letter, index);
 
-        guessedWordCount += 1;
+                        const letterId = firstLetterId + index;
+                        const letterEl = document.getElementById(letterId);
+                        letterEl.classList.add("animate__flipInX"); 
+                        letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
+                    }, interval * index);
+                });
 
-        if(currentWord === word) {
-        // showMessage('Parabéns!');
-        window.alert('Parabéns!');
-        }
+                guessedWordCount += 1;
 
-        if(guessedWords.length === 6) {
-                // showMessage(`Palavra: ${word}`);
-                window.alert(`Palavra: ${word}`)
-        }
+                setTimeout(() => {
+                if(currentWord === word) {
+                // showMessage('Parabéns!');
+                window.alert('Parabéns!');
+                }
 
-        guessedWords.push([]);
-    }
+                if(guessedWords.length === 6) {
+                        // showMessage(`Palavra: ${word}`);
+                        window.alert(`Palavra: ${word}`)
+                }}, 1000);
+
+                guessedWords.push([]);
+            }
+        }).catch(err => console.log(err));
+    };
     
     
     function createSquares() {
@@ -127,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    const showMessage = (message) => {
+function showMessage (message) {
         const messageEl = document.createElement('p');
         messageEl.textContent = message;
         messageDisplay.append(messageEl);
