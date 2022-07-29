@@ -1,166 +1,181 @@
-document.addEventListener("DOMContentLoaded", () => {
-    createSquares();
-    getNewWord();
-    
+const tileDisplay = document.querySelector('.tile-container')
+const keyboard = document.querySelector('.key-container')
+const messageDisplay = document.querySelector('.message-container')
 
-    let guessedWords = [[]];
-    let availableSpace = 1;
 
-    let word;
+const wordle = 'SUPER'
 
-function getNewWord() {
-        fetch('http://localhost:8000/word')
-        .then((response) => {
-            return response.json();
-        })
-        .catch((err) => {
-            console.error(err);
-        });
+const keys = [
+    'Q',
+    'W',
+    'E',
+    'R',
+    'T',
+    'Y',
+    'U',
+    'I',
+    'O',
+    'P',
+    'A',
+    'S',
+    'D',
+    'F',
+    'G',
+    'H',
+    'J',
+    'K',
+    'L',
+    'ENTER',
+    'Z',
+    'X',
+    'C',
+    'V',
+    'B',
+    'N',
+    'M',
+    '<<',
+]
+
+const guessRows = [
+
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', ''],
+    ['', '', '', '', '']
+]
+
+let currentRow = 0
+let currentTile = 0
+let isGameOver = false
+
+guessRows.forEach((guessRow, guessRowIndex) => {
+    const rowElement = document.createElement('div')
+    rowElement.setAttribute('id', 'guessRow-' + guessRowIndex)
+    guessRow.forEach((guess, guessIndex) => {
+        const tileElement = document.createElement('div')
+        tileElement.setAttribute('id','guessRow-' + guessRowIndex + '-tile-' + guessIndex)
+        tileElement.classList.add('tile')
+        rowElement.append(tileElement)
+    })
+    tileDisplay.append(rowElement)
+})
+
+keys.forEach(key => {
+    const buttonElement = document.createElement('button')
+    buttonElement.textContent = key
+    buttonElement.setAttribute('id', key)
+    buttonElement.addEventListener('click', () => handleClick(key))
+    keyboard.append(buttonElement)
+})
+
+const handleClick = (letter) => {
+    console.log("clicked", letter)
+
+    if(letter === '<<') {
+        deleteLetter()
+        console.log('guessRows', guessRows)
+        return
     }
-
-
-    let guessedWordCount = 0;
-
-    const keys = document.querySelectorAll(".keyboard-row button");
-    const messageDisplay = document.querySelectorAll(".message-container");
-
-    
-    function getCurrentWordArr() {
-        const numberOfGuessedWords = guessedWords.length;
-        return guessedWords[numberOfGuessedWords - 1];
+    if(letter === 'ENTER') {
+        checkRow()
+        console.log('guessRows', guessRows)
+        return
     }
-    
-    function updateGuessedWords(letter) {
-        const currentWordArr = getCurrentWordArr();
-        
-        if (currentWordArr && currentWordArr.length < 5) {
-            currentWordArr.push(letter);
-            
-            const availableSpaceEl = document.getElementById(String(availableSpace));
-            availableSpace = availableSpace + 1;
-            
-            availableSpaceEl.textContent = letter;
-        }
+    addLetter(letter)
+
+}
+
+const addLetter = (letter) => {
+    if (currentTile < 5 && currentRow <6) {
+    const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
+    tile.textContent = letter
+    guessRows[currentRow] [currentTile] = letter
+    tile.setAttribute('data', letter)
+    currentTile++
+    console.log('guessRows', guessRows)
     }
+}
 
-    function getTileColor(letter, index) {
-        const isCorrectLetter = word.includes(letter);
-
-        if(!isCorrectLetter) {
-            return "rgb(58, 58, 60)";
-        }
-
-        const letterInThatPosition = word.charAt(index);
-        const isCorrectPosition = letter === letterInThatPosition;
-
-        if(isCorrectPosition) {
-            return "rgb(83, 141, 78)";
-        }
-
-        return "rgb(181, 159, 59)";
+const deleteLetter = () => {
+    if(currentTile >0) {
+    currentTile--
+    const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
+    tile.textContent = ''
+    guessRows[currentRow][currentTile] = ''
+    tile.setAttribute('data', '')
     }
+}
 
-    function handleSubmitWord() {
-        const currentWordArr = getCurrentWordArr()
+const checkRow = () => {
+        const guess = guessRows[currentRow].join('')
 
-        if(currentWordArr.length !==5) { 
-            // showMessage("A palavra deve conter cinco letras!");
-            window.alert("A palavra deve conter cinco letras!");
-        }
+            if(currentTile > 4) {
 
-        const currentWord = currentWordArr.join("");
-
-        fetch(`http://localhost:8000/check/?word=${currentWord}`)
-        .then(response => response.json())
-        .then(json => {
-            console.log(json)
-            if(json === 'Entry guess not found') {
-                window.alert("Palavra não identificada.")
+        console.log('guess is', guess + ' wordle is ' + wordle)
+        flipTile()
+        if(wordle === guess) {
+            showMessage('Magnificent!')
+            isGameOver = true
+            return
+        } else {
+            if(currentRow >=5) {
+                isGameOver = true
+                showMessage("Game Over")
                 return
             }
-            else {
-
-                const firstLetterId = guessedWordCount * 5 + 1;
-                const interval = 200;
-                currentWordArr.forEach((letter, index) => {
-                    setTimeout(() => {
-                        const tileColor = getTileColor(letter, index);
-
-                        const letterId = firstLetterId + index;
-                        const letterEl = document.getElementById(letterId);
-                        letterEl.classList.add("animate__flipInX"); 
-                        letterEl.style = `background-color:${tileColor};border-color:${tileColor}`;
-                    }, interval * index);
-                });
-
-                guessedWordCount += 1;
-
-                setTimeout(() => {
-                if(currentWord === word) {
-                // showMessage('Parabéns!');
-                window.alert('Parabéns!');
-                }
-
-                if(guessedWords.length === 6) {
-                        // showMessage(`Palavra: ${word}`);
-                        window.alert(`Palavra: ${word}`)
-                }}, 1000);
-
-                guessedWords.push([]);
+            if (currentRow <5) {
+                currentRow++
+                currentTile = 0
             }
-        }).catch(err => console.log(err));
-    };
-    
-    
-    function createSquares() {
-        const gameBoard = document.getElementById("board");
-        
-        for (let index = 0; index <30; index++) {
-            let square = document.createElement("div");
-            square.classList.add("square");
-            square.classList.add("animate__animated");
-            square.setAttribute("id", index + 1);
-            gameBoard.appendChild(square);
         }
     }
+}
 
-    function handleDeleteLetter(){
-        const currentWordArr = getCurrentWordArr();
-        const removedLetter = currentWordArr.pop();
+const showMessage = (message) => {
+    const messageElement = document.createElement('p')
+    messageElement.textContent = message
+    messageDisplay.append(messageElement)
+    setTimeout(() => messageDisplay.removeChild(messageElement), 2000)
+}
 
+const addColorToKey = (keyLetter, color) => {
+    const key = document.getElementById(keyLetter)
+    key.classList.add(color)
+}
 
-        guessedWords[guessedWords.length - 1] = currentWordArr;
+const flipTile = () => {
+    const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
+    let checkWordle = wordle
+    const guess = []
 
-        const lastLetterEl = document.getElementById(String(availableSpace - 1));
+    rowTiles.forEach(tile => {
+        guess.push({ letter: tile.getAttribute('data'), color: 'grey-overlay'})
+    })
 
-        lastLetterEl.textContent = '';
-        availableSpace = availableSpace - 1;
-    }
+    guess.forEach((guess, index) => {
+        if(guess.letter === wordle[index]) {
+            guess.color = 'green-overlay'
+            checkWordle = checkWordle.replace(guess.letter, '')
+        }
+    })
 
-    for (let i = 0; i < keys.length; i++) {
-        keys[i].onclick = ({target}) => {
-            const letter = target.getAttribute("data-key");
+    guess.forEach(guess => {
+        if(checkWordle.includes(guess.letter)) {
+            guess.color = 'yellow-overlay'
+            checkWordle = checkWordle.replace(guess.letter, '')
 
-            if(letter === "enter") {
-                handleSubmitWord();
-                return;
-            }
+        }
+    })
 
-            if(letter === "del") {
-                handleDeleteLetter();
-                return;
-            }
+    rowTiles.forEach((tile, index) => {
+        setTimeout(() => {
+            tile.classList.add('flip')
+            tile.classList.add(guess[index].color)
+            addColorToKey(guess[index].letter, guess[index].color)
 
-            updateGuessedWords(letter);
-        };
-    }
+        }, 500 * index)
+    })
+}
 
-function showMessage (message) {
-        const messageEl = document.createElement('p');
-        messageEl.textContent = message;
-        messageDisplay.append(messageEl);
-        setTimeout(() => messageDisplay.removeChild(messageEl), 2000)
-
-    }
-
-    });

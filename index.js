@@ -29,26 +29,26 @@ axios.request(options).then((response) => {
 
 })
 
-app.get('/check', (req, res) => {
-    const guess = req.query.guess
+// app.get('/check', (req, res) => {
+//     const guess = req.query.guess
 
-const options = {
-    method: 'GET',
-    url: 'https://twinword-word-graph-dictionary.p.rapidapi.com/association/',
-    params: {entry: guess},
-    headers: {
-    'X-RapidAPI-Key': process.env.RAPID_API_KEY,
-    'X-RapidAPI-Host': 'twinword-word-graph-dictionary.p.rapidapi.com'
-    }
-};
+// const options = {
+//     method: 'GET',
+//     url: 'https://twinword-word-graph-dictionary.p.rapidapi.com/association/',
+//     params: {entry: guess},
+//     headers: {
+//     'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+//     'X-RapidAPI-Host': 'twinword-word-graph-dictionary.p.rapidapi.com'
+//     }
+// };
 
-axios.request(options).then((response) => {
-	console.log(response.data);
-    res.json(response.data.result_msg);
-}).catch((error) => {
-	console.error(error);
-    });
-})
+// axios.request(options).then((response) => {
+// 	console.log(response.data);
+//     res.json(response.data.result_msg);
+// }).catch((error) => {
+// 	console.error(error);
+//     });
+// })
 
 
 app.listen(PORT, () => console.log("Server running on port " + PORT))
