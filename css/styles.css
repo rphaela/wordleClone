@@ -11,10 +11,41 @@ body {
 }
 
 .title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    width: 100%;
+    
+}
+
+.title-container h1{
+    padding-top: 10px;
     text-align: center;
-    width: 510px;
+    font-display: center;
+    font-weight: bold;
+    font-size: 35px;
+}
+
+.simbols-container i{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-align: right;
+    font-display: right;
+    font-size: 15px;
+
+}
+
+header {
+    display: flex;
+    align-items: center;
+    width: 100%;
     border-bottom: 1px solid #3a3a3c;
 }
+
 
 .game-container {
     height: 90vh;
@@ -25,9 +56,10 @@ body {
 }
 
 
-.title-container {
+.tile-container {
     width: 330px;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
+    margin-top: 20px;
 }
 
 .key-container {
@@ -43,6 +75,8 @@ body {
     border: none;
     background-color: #818384;
     margin: 4px;
+    font-size: 15px;
+    font-weight: bold;
 }
 
 .key-container button:nth-child(11) {
@@ -59,14 +93,18 @@ body {
 }
 
 .tile-container .tile{
-    width: 62px;
+    width: 100%;
     height: 62px;
-    border: 2px solid #3a3a3c;
+    border: 3px solid #3a3a3c;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     margin: 2px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 40px;
 }
 
 .message-container {

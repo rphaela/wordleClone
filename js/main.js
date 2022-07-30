@@ -3,7 +3,19 @@ const keyboard = document.querySelector('.key-container')
 const messageDisplay = document.querySelector('.message-container')
 
 
-const wordle = 'SUPER'
+let wordle = "SWIFT"
+
+// const getWordle = () => {
+//     fetch('http://localhost:8000/word')
+//     .then(response => response.json())
+//     .then(json => {
+//         console.log(json)
+//         wordle = json.toUpperCase()
+//     })
+//     .catch(err => console.log(err))
+// }
+
+// getWordle()
 
 const keys = [
     'Q',
@@ -113,6 +125,7 @@ const checkRow = () => {
 
             if(currentTile > 4) {
 
+
         console.log('guess is', guess + ' wordle is ' + wordle)
         flipTile()
         if(wordle === guess) {
@@ -130,6 +143,8 @@ const checkRow = () => {
                 currentTile = 0
             }
         }
+    } else {
+        showMessage("Not enough letters")
     }
 }
 
