@@ -3,10 +3,10 @@ const keyboard = document.querySelector('.key-container')
 const messageDisplay = document.querySelector('.message-container')
 
 
-let wordle = "SWIFT"
+let wordle = "swift"
 
 // const getWordle = () => {
-//     fetch('http://localhost:8000/word')
+//     fetch('https://od-api.oxforddictionaries.com/api/v2/word')
 //     .then(response => response.json())
 //     .then(json => {
 //         console.log(json)
@@ -18,33 +18,33 @@ let wordle = "SWIFT"
 // getWordle()
 
 const keys = [
-    'Q',
-    'W',
-    'E',
-    'R',
-    'T',
-    'Y',
-    'U',
-    'I',
-    'O',
-    'P',
-    'A',
-    'S',
-    'D',
-    'F',
-    'G',
-    'H',
-    'J',
-    'K',
-    'L',
-    'ENTER',
-    'Z',
-    'X',
-    'C',
-    'V',
-    'B',
-    'N',
-    'M',
+    'q',
+    'w',
+    'e',
+    'r',
+    't',
+    'y',
+    'u',
+    'i',
+    'o',
+    'p',
+    'a',
+    's',
+    'd',
+    'f',
+    'g',
+    'h',
+    'j',
+    'k',
+    'l',
+    'Enter',
+    'z',
+    'x',
+    'c',
+    'v',
+    'b',
+    'n',
+    'm',
     '<<',
 ]
 
@@ -79,6 +79,7 @@ keys.forEach(key => {
     buttonElement.textContent = key
     buttonElement.setAttribute('id', key)
     buttonElement.addEventListener('click', () => handleClick(key))
+    buttonElement.addEventListener('keydown', (e) => logKey(e.key))
     keyboard.append(buttonElement)
 })
 
@@ -96,8 +97,33 @@ const handleClick = (letter) => {
         return
     }
     addLetter(letter)
-
 }
+
+const logKey = (letter) => {
+        console.log('clicked', letter)
+
+    const lettersPattern = /[a-z]/;
+    lettersPattern.test(letter)
+
+    if(lettersPattern.test(letter) && letter === 'Enter') {
+        checkRow()
+        console.log('guessRows', guessRows)
+        return
+    }
+
+    if(lettersPattern.test(letter) && letter === 'Backspace') {
+        deleteLetter()
+        console.log('guessRows', guessRows)
+        return
+    }
+    else {
+        if(lettersPattern.test(letter) && letter.length === 1) {
+        addLetter(letter)
+        return
+        }
+    }
+}
+
 
 const addLetter = (letter) => {
     if (currentTile < 5 && currentRow <6) {
@@ -111,7 +137,7 @@ const addLetter = (letter) => {
 }
 
 const deleteLetter = () => {
-    if(currentTile >0) {
+    if(currentTile >0 && !isGameOver) {
     currentTile--
     const tile = document.getElementById('guessRow-' + currentRow + '-tile-' + currentTile)
     tile.textContent = ''
@@ -124,10 +150,9 @@ const checkRow = () => {
         const guess = guessRows[currentRow].join('')
 
             if(currentTile > 4) {
-
-
         console.log('guess is', guess + ' wordle is ' + wordle)
         flipTile()
+
         if(wordle === guess) {
             showMessage('Magnificent!')
             isGameOver = true
@@ -145,6 +170,7 @@ const checkRow = () => {
         }
     } else {
         showMessage("Not enough letters")
+        shakeTile()
     }
 }
 
@@ -177,7 +203,7 @@ const flipTile = () => {
     })
 
     guess.forEach(guess => {
-        if(checkWordle.includes(guess.letter)) {
+        if(checkWordle.includes(guess.letter) && guess.color != 'green-overlay') {
             guess.color = 'yellow-overlay'
             checkWordle = checkWordle.replace(guess.letter, '')
 
@@ -192,5 +218,16 @@ const flipTile = () => {
 
         }, 500 * index)
     })
+}
+
+const shakeTile = () => {
+    const rowTiles = document.querySelector('#guessRow-' + currentRow).childNodes
+
+    rowTiles.forEach((tile) => {
+        setTimeout(() => {
+            tile.classList.add('shake')
+        }, 500)
+    })
+
 }
 
