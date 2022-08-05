@@ -2,19 +2,11 @@ const tileDisplay = document.querySelector(".tile-container");
 const keyboard = document.querySelector(".key-container");
 const messageDisplay = document.querySelector(".message-container");
 
-let wordle = "swift";
+const words = ['', 'sagaz', 'amago', 'exito', 'mexer','termo', 'clone', 'nobre',
+'senso', 'algoz', 'afeto', 'plena', 'etica', 'mutua', 'tenue', 'sutil', 'vigor',
+'aquem', 
+];
 
-// const getWordle = () => {
-//     fetch('https://od-api.oxforddictionaries.com/api/v2/word')
-//     .then(response => response.json())
-//     .then(json => {
-//         console.log(json)
-//         wordle = json.toUpperCase()
-//     })
-//     .catch(err => console.log(err))
-// }
-
-// getWordle()
 
 const keys = [
   "q",
@@ -59,6 +51,16 @@ const guessRows = [
 let currentRow = 0;
 let currentTile = 0;
 let isGameOver = false;
+let wordle = '';
+
+const chooseWordle = () => {
+let randomWord = Math.floor(Math.random() * (words.length -1))+1;
+wordle = words[randomWord]
+console.log("solution: ", wordle)
+}
+
+chooseWordle();
+
 
 guessRows.forEach((guessRow, guessRowIndex) => {
   const rowElement = document.createElement("div");
