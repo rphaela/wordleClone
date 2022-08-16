@@ -2,11 +2,11 @@ const tileDisplay = document.querySelector(".tile-container");
 const keyboard = document.querySelector(".key-container");
 const messageDisplay = document.querySelector(".message-container");
 
-const words = ['', 'sagaz', 'amago', 'exito', 'mexer','termo', 'clone', 'nobre',
+
+const words = ['sagaz', 'amago', 'exito', 'mexer','termo', 'clone', 'nobre',
 'senso', 'algoz', 'afeto', 'plena', 'etica', 'mutua', 'tenue', 'sutil', 'vigor',
 'aquem', 
 ];
-
 
 const keys = [
   "q",
@@ -50,17 +50,52 @@ const guessRows = [
 
 let currentRow = 0;
 let currentTile = 0;
+let currentWordIndex = 0;
 let isGameOver = false;
-let wordle = '';
+let wordle = words[currentWordIndex];
 
-const chooseWordle = () => {
-let randomWord = Math.floor(Math.random() * (words.length -1))+1;
-wordle = words[randomWord]
-console.log("solution: ", wordle)
+const initLocalStorage = () => {
+    const storedCurrentWordIndex = window.localStorage.getItem('currentWordIndex')
+    if(!storedCurrentWordIndex) {
+        window.localStorage.setItem('currentWordIndex', currentWordIndex)
+    } else {
+    currentWordIndex = Number(storedCurrentWordIndex)
+    wordle = words[currentWordIndex]
+    }
 }
 
-chooseWordle();
+const loadLocalStorage = () => {
+  currentWordIndex = Number(window.localStorage.getItem('currentWordIndex')) || currentWordIndex
+  currentRow = Number(window.localStorage.getItem('currentRow')) || currentRow
 
+  wordle = words[currentWordIndex]
+
+  const storedBoardContainer = window.localStorage.getItem('boardContainer')
+  if(storedBoardContainer) {
+    document.querySelector(".tile-container").innerHTML = storedBoardContainer
+  }
+
+  const storedKeyboardContainer = window.localStorage.getItem('keyboardContainer')
+  if(storedKeyboardContainer) {
+    document.querySelector(".key-container").innerHTML = storedKeyboardContainer
+  }
+}
+
+initLocalStorage()
+
+const updateWordIndex = () => {
+    window.localStorage.setItem('currentWordIndex', currentWordIndex + 1)
+}
+
+const preserveGameState = () => {
+  
+  const boardContainer = document.querySelector(".tile-container") 
+  window.localStorage.setItem('boardContainer', boardContainer.innerHTML)
+
+    const keyboardContainer = document.querySelector(".key-container");
+    window.localStorage.setItem('keyboardContainer', keyboardContainer.innerHTML)
+
+}
 
 guessRows.forEach((guessRow, guessRowIndex) => {
   const rowElement = document.createElement("div");
@@ -77,6 +112,7 @@ guessRows.forEach((guessRow, guessRowIndex) => {
   tileDisplay.append(rowElement);
 });
 
+
 keys.forEach((key) => {
   const buttonElement = document.createElement("button");
   buttonElement.textContent = key;
@@ -85,6 +121,8 @@ keys.forEach((key) => {
   buttonElement.addEventListener("keydown", (e) => logKey(e.key));
   keyboard.append(buttonElement);
 });
+
+loadLocalStorage()
 
 const handleClick = (letter) => {
   console.log("clicked", letter);
@@ -151,20 +189,24 @@ const deleteLetter = () => {
   }
 };
 
+
 const checkRow = () => {
   const guess = guessRows[currentRow].join("");
 
   if (currentTile > 4) {
     console.log("guess is", guess + " wordle is " + wordle);
     flipTile();
+    localStorage.setItem('currentTile', currentTile)
 
     if (wordle === guess) {
+
       if (currentRow === 0) {
         setTimeout(() => {
           showMessage("genius");
           isGameOver = true;
           jumpTile();
         }, 2400);
+        updateWordIndex()
         return;
       }
       if (currentRow === 1) {
@@ -173,6 +215,7 @@ const checkRow = () => {
           isGameOver = true;
           jumpTile();
         }, 2400);
+        updateWordIndex()
         return;
       }
       if (currentRow === 2) {
@@ -181,6 +224,7 @@ const checkRow = () => {
           isGameOver = true;
           jumpTile();
         }, 2400);
+        updateWordIndex()
         return;
       }
       if (currentRow === 3) {
@@ -189,6 +233,7 @@ const checkRow = () => {
           isGameOver = true;
           jumpTile();
         }, 2400);
+        updateWordIndex()
         return;
       }
       if (currentRow === 4) {
@@ -197,6 +242,7 @@ const checkRow = () => {
           isGameOver = true;
           jumpTile();
         }, 2400);
+        updateWordIndex()
         return;
       }
       if (currentRow === 5) {
@@ -205,6 +251,7 @@ const checkRow = () => {
           isGameOver = true;
           jumpTile();
         }, 2400);
+        updateWordIndex()
         return;
       }
     } else {
@@ -213,12 +260,15 @@ const checkRow = () => {
           showMessage(`${wordle}`);
           isGameOver = true;
         }, 2400);
+        updateWordIndex()
         return;
       }
       if (currentRow < 5) {
         setTimeout(() => {
         currentRow++;
+        window.localStorage.setItem('currentRow', currentRow)
         currentTile = 0;}, 2400)
+        
       }
     }
   } else {
@@ -227,6 +277,7 @@ const checkRow = () => {
   }
 };
 
+
 const showMessage = (message) => {
   const messageElement = document.createElement("p");
   messageElement.textContent = message;
@@ -234,10 +285,12 @@ const showMessage = (message) => {
   setTimeout(() => messageDisplay.removeChild(messageElement), 2000);
 };
 
+
 const addColorToKey = (keyLetter, color) => {
   const key = document.getElementById(keyLetter);
   key.classList.add(color);
 };
+
 
 const flipTile = () => {
   const rowTiles = document.querySelector("#guessRow-" + currentRow).childNodes;
@@ -267,6 +320,10 @@ const flipTile = () => {
       tile.classList.add("flip");
       tile.classList.add(guess[index].color);
       addColorToKey(guess[index].letter, guess[index].color);
+
+    if (index === 4) {
+        preserveGameState()
+    }
     }, 500 * index);
   });
 };
@@ -286,4 +343,4 @@ const jumpTile = () => {
           tile.classList.add("jump");
         }, 250 * index);
       });
-    };
+};
