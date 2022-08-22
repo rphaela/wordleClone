@@ -33,6 +33,55 @@ body {
 .simbols-container i{
     font-size: 35px;
     padding-right: 15px;
+    cursor: pointer;
+}
+
+.bg-modal {
+    background-color:#121213;
+    border-radius: 8px;
+    border: 1px solid #1a1a1b;
+    box-shadow: 0 4px 23px 0 rgb(0 0 0 / 20%);
+    box-sizing: border-box;
+}
+
+.sub-modal {
+    font-size: 14px;
+    width: 90%;
+    max-height: 100%;
+    overflow-y: auto;
+    /* padding: 16px; */
+
+}
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+
+.modal-title {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 2px;
+    margin-top: 0px;
+    display: block;
+}
+
+.modal-title h1 {
+    margin-block-start: 0.67em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.btn-close {
+    background-color: #ffffff;
 }
 
 header {
@@ -136,22 +185,6 @@ header {
     border: none !important;
 }
 
-.tile.flip {
-    animation: 0.5s linear flipping;
-}
-
-@keyframes flipping {
-    0% {
-        transform: rotateX(0deg);
-    }
-    50% {
-        transform: rotateX(90deg);
-    }
-    100% {
-        transform: rotateX(0deg);
-    }
-}
-
 .tile.shake {
     animation: shaking 0.82s cubic-bezier(.36,.07,.19,.97) both;
     animation-iteration-count: initial;
@@ -174,6 +207,23 @@ header {
         transform: translate3d(4px, 0, 0);
     }
 }
+
+.tile.flip {
+    animation: 0.5s linear flipping;
+}
+
+@keyframes flipping {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(90deg);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
 
 .tile.jump {
     animation: jumping 200ms;

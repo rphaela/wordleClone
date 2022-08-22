@@ -54,48 +54,6 @@ let currentWordIndex = 0;
 let isGameOver = false;
 let wordle = words[currentWordIndex];
 
-const initLocalStorage = () => {
-    const storedCurrentWordIndex = window.localStorage.getItem('currentWordIndex')
-    if(!storedCurrentWordIndex) {
-        window.localStorage.setItem('currentWordIndex', currentWordIndex)
-    } else {
-    currentWordIndex = Number(storedCurrentWordIndex)
-    wordle = words[currentWordIndex]
-    }
-}
-
-const loadLocalStorage = () => {
-  currentWordIndex = Number(window.localStorage.getItem('currentWordIndex')) || currentWordIndex
-  currentRow = Number(window.localStorage.getItem('currentRow')) || currentRow
-
-  wordle = words[currentWordIndex]
-
-  const storedBoardContainer = window.localStorage.getItem('boardContainer')
-  if(storedBoardContainer) {
-    document.querySelector(".tile-container").innerHTML = storedBoardContainer
-  }
-
-  const storedKeyboardContainer = window.localStorage.getItem('keyboardContainer')
-  if(storedKeyboardContainer) {
-    document.querySelector(".key-container").innerHTML = storedKeyboardContainer
-  }
-}
-
-initLocalStorage()
-
-const updateWordIndex = () => {
-    window.localStorage.setItem('currentWordIndex', currentWordIndex + 1)
-}
-
-const preserveGameState = () => {
-  
-  const boardContainer = document.querySelector(".tile-container") 
-  window.localStorage.setItem('boardContainer', boardContainer.innerHTML)
-
-    const keyboardContainer = document.querySelector(".key-container");
-    window.localStorage.setItem('keyboardContainer', keyboardContainer.innerHTML)
-
-}
 
 guessRows.forEach((guessRow, guessRowIndex) => {
   const rowElement = document.createElement("div");
@@ -112,57 +70,112 @@ guessRows.forEach((guessRow, guessRowIndex) => {
   tileDisplay.append(rowElement);
 });
 
-
 keys.forEach((key) => {
   const buttonElement = document.createElement("button");
   buttonElement.textContent = key;
   buttonElement.setAttribute("id", key);
-  buttonElement.addEventListener("click", () => handleClick(key));
-  buttonElement.addEventListener("keydown", (e) => logKey(e.key));
   keyboard.append(buttonElement);
 });
 
-loadLocalStorage()
+  const handleClick = () => {
+    const clicks = document.querySelectorAll(".key-container button");
+    for (let i = 0; i < clicks.length; i++) {
+      clicks[i].addEventListener("click", ({target}) => {
+        const letter = target.getAttribute("id")
+            console.log("clicked", letter);
 
-const handleClick = (letter) => {
-  console.log("clicked", letter);
+        if (letter === "<<") {
+          deleteLetter();
+          // console.log("guessRows", guessRows);
+          return;
+        }
+        if (letter === "Enter") {
+          checkRow();
+          // console.log("guessRows", guessRows);
+          return;
+        }
+        addLetter(letter);
 
-  if (letter === "<<") {
-    deleteLetter();
-    console.log("guessRows", guessRows);
-    return;
-  }
-  if (letter === "Enter") {
-    checkRow();
-    console.log("guessRows", guessRows);
-    return;
-  }
-  addLetter(letter);
-};
-
-const logKey = (letter) => {
-  console.log("clicked", letter);
-
-  const lettersPattern = /[a-z]/;
-  lettersPattern.test(letter);
-
-  if (letter === "Enter") {
-    checkRow();
-    console.log("guessRows", guessRows);
-    return;
-  }
-
-  if (letter === "Backspace") {
-    deleteLetter();
-    console.log("guessRows", guessRows);
-    return;
-  } else {
-    if (lettersPattern.test(letter) && letter.length === 1) {
-      addLetter(letter);
-      return;
+      })
     }
   }
-};
+
+  const handleKeypress = () => {
+  document.addEventListener("keydown", (e) => {
+      const letter = e.key
+          console.log("clicked", e.key);
+        
+          const lettersPattern = /[a-z]/;
+          lettersPattern.test(letter);
+        
+          if (letter === "Enter") {
+            checkRow();
+            console.log("guessRows", guessRows);
+            return;
+          }
+        
+          if (letter === "Backspace") {
+            deleteLetter();
+            console.log("guessRows", guessRows);
+            return;
+          } else {
+            if (lettersPattern.test(letter) && letter.length === 1) {
+              addLetter(letter);
+              return;
+            }
+          }
+
+    })
+  }
+
+const initLocalStorage = () => {
+    const storedCurrentWordIndex = window.localStorage.getItem('currentWordIndex')
+    if(!storedCurrentWordIndex) {
+        window.localStorage.setItem('currentWordIndex', currentWordIndex)
+    } else {
+    currentWordIndex = Number(storedCurrentWordIndex)
+    wordle = words[currentWordIndex]
+    }
+}
+
+  initLocalStorage();
+  handleClick()
+  handleKeypress()
+
+const loadLocalStorage = () => {
+  currentWordIndex = Number(window.localStorage.getItem('currentWordIndex')) || currentWordIndex
+  currentRow = Number(window.localStorage.getItem('currentRow')) || currentRow
+
+  wordle = words[currentWordIndex]
+
+  const storedBoardContainer = window.localStorage.getItem('boardContainer')
+  if(storedBoardContainer) {
+    document.querySelector(".tile-container").innerHTML = storedBoardContainer
+  }
+
+  const storedKeyboardContainer = window.localStorage.getItem('keyboardContainer')
+  if(storedKeyboardContainer) {
+    document.querySelector(".key-container").innerHTML = storedKeyboardContainer
+    handleClick()
+    handleKeypress()
+  }
+}
+
+loadLocalStorage()
+
+const updateWordIndex = () => {
+    window.localStorage.setItem('currentWordIndex', currentWordIndex + 1)
+}
+
+const preserveGameState = () => {
+  
+  const boardContainer = document.querySelector(".tile-container") 
+  window.localStorage.setItem('boardContainer', boardContainer.innerHTML)
+
+  const keyboardContainer = document.querySelector(".key-container");
+  window.localStorage.setItem('keyboardContainer', keyboardContainer.innerHTML)
+
+}
 
 const addLetter = (letter) => {
   if (currentTile < 5 && currentRow < 6) {
@@ -188,7 +201,6 @@ const deleteLetter = () => {
     tile.setAttribute("data", "");
   }
 };
-
 
 const checkRow = () => {
   const guess = guessRows[currentRow].join("");
@@ -276,7 +288,6 @@ const checkRow = () => {
     shakeTile();
   }
 };
-
 
 const showMessage = (message) => {
   const messageElement = document.createElement("p");
