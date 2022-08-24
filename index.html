@@ -55,33 +55,57 @@
       <!-- MODAL -->
 
       <!-- MODAL: HOWTOPLAY -->
-      <div class="modal fade" id="howToPlay" tabindex="-1" aria-labelledby="howToPlayLabel" aria-hidden="true">
+      <div
+        class="modal fade"
+        id="howToPlay"
+        tabindex="-1"
+        aria-labelledby="howToPlayLabel"
+        aria-hidden="true"
+      >
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content bg-modal">
             <div class="modal-header">
-              <h1 class="modal-title w-100  justify-content-center" id="howToPlayLabel">como jogar</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-              </button>
-              </div>
-              <div class="modal-body">
-              <div class="sub-modal">
-              <p>Adivinhe o
-                <strong>WORDLE</strong>
-                em 6 tentativas.</p>
-              <p>Cada palpite precisa ser uma palavra válida de 5 letras.
-                Clique no botão enter para enviar.</p>
+              <h1
+                class="modal-title w-100 justify-content-center"
+                id="howToPlayLabel"
+              >
+                como jogar
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="help-modal">
+                <p>
+                  Adivinhe o
+                  <strong>WORDLE</strong>
+                  em 6 tentativas.
+                </p>
+                <p>
+                  Cada palpite precisa ser uma palavra válida de 5 letras.
+                  Clique no botão enter para enviar.
+                </p>
 
-                <p>Depois de cada palpite, a cor das peças irão mudar para mostrar
-                  o quão perto foi seu palpite da palavra certa. 
+                <p>
+                  Depois de cada palpite, a cor das peças irão mudar para
+                  mostrar o quão perto foi seu palpite da palavra certa.
                 </p>
               </div>
-              <hr>
-            
-            <p>bla bla bla</p>
-            <p>bla bla</p>  
+              <hr/>
+
+              <strong>Exemplos</strong>
+              <p>bla bla</p>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
                 Close
               </button>
               <button type="button" class="btn btn-primary">
@@ -92,49 +116,134 @@
         </div>
       </div>
 
-            <!-- MODAL: STATS -->
-            <div class="modal fade" id="stats" tabindex="-1" aria-labelledby="statsLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="statsLabel">Modal title</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                      </button>
-                    </div>
-                    <div class="modal-body bg-dark">STATS AQUI</div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Close
-                      </button>
-                      <button type="button" class="btn btn-primary">
-                        Save changes
-                      </button>
-                    </div>
-                  </div>
-                </div>
+      <!-- MODAL: STATS -->
+      <div
+        class="modal fade"
+        id="stats"
+        tabindex="-1"
+        aria-labelledby="statsLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content bg-modal">
+            <div class="modal-header">
+              <h1
+                class="modal-title w-100 justify-content-center"
+                id="statsLabel"
+              >
+                statistics
+              </h1>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div
+              class="modal-body d-flex align-content-center justify-content-center stats-modal"
+            >
+              <div class="stats-elements">
+                <span id="totalPlayed"></span>
+                <p><strong>jogos </strong></p>
               </div>
 
-                <!-- MODAL: CONFIG -->
-                <div class="modal fade" id="config" tabindex="-1" aria-labelledby="configLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="configLabel">Modal title</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                          </button>
-                        </div>
-                        <div class="modal-body bg-dark">CONFIGURAÇÕES AQUI</div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            Close
-                          </button>
-                          <button type="button" class="btn btn-primary">
-                            Save changes
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div class="stats-elements">
+                <span id="winPct"></span> %
+                <p><strong>de vitórias </strong></p>
+              </div>
+
+              <div class="stats-elements">
+                <span id="currentStreak"></span>
+                <p>
+                  <strong> sequência <br />de vitórias </strong>
+                </p>
+              </div>
+
+              <div class="stats-elements">
+                <span id="bestStreak"></span>
+                <p>
+                  <strong>melhor <br />sequência </strong>
+                </p>
+              </div>
+            </div>
+
+            <h2>distribuição de tentativas</h2>
+            <div class="stats-progress">
+              <p>1</p>
+              <span>
+                <div></div>
+              </span>
+
+              <p>2</p>
+              <span>
+                <div></div>
+              </span>
+
+              <p>3</p>
+              <span>
+                <div></div>
+              </span>
+
+              <p>4</p>
+              <span>
+                <div></div>
+              </span>
+
+              <p>5</p>
+              <span>
+                <div></div>
+              </span>
+
+              <p>6</p>
+              <span>
+                <div></div>
+              </span>
+
+              <p>💀</p>
+              <span>
+                <div></div>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: CONFIG -->
+      <div
+        class="modal fade"
+        id="config"
+        tabindex="-1"
+        aria-labelledby="configLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="configLabel">Modal title</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body bg-dark">CONFIGURAÇÕES AQUI</div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">
+                Save changes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="message-container"></div>
       <div class="tile-container"></div>

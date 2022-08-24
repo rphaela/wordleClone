@@ -53,6 +53,7 @@ let currentTile = 0;
 let currentWordIndex = 0;
 let isGameOver = false;
 let wordle = words[currentWordIndex];
+let checkingRow = false;
 
 
 guessRows.forEach((guessRow, guessRowIndex) => {
@@ -128,10 +129,16 @@ keys.forEach((key) => {
     })
   }
 
+const showHelp = () => {
+    const help = new bootstrap.Modal(document.getElementById('howToPlay'), {});
+    help.show();
+}
+
 const initLocalStorage = () => {
     const storedCurrentWordIndex = window.localStorage.getItem('currentWordIndex')
     if(!storedCurrentWordIndex) {
         window.localStorage.setItem('currentWordIndex', currentWordIndex)
+        showHelp()
     } else {
     currentWordIndex = Number(storedCurrentWordIndex)
     wordle = words[currentWordIndex]
@@ -157,7 +164,6 @@ const loadLocalStorage = () => {
   if(storedKeyboardContainer) {
     document.querySelector(".key-container").innerHTML = storedKeyboardContainer
     handleClick()
-    handleKeypress()
   }
 }
 
@@ -168,13 +174,19 @@ const updateWordIndex = () => {
 }
 
 const preserveGameState = () => {
-  
+
   const boardContainer = document.querySelector(".tile-container") 
   window.localStorage.setItem('boardContainer', boardContainer.innerHTML)
 
   const keyboardContainer = document.querySelector(".key-container");
   window.localStorage.setItem('keyboardContainer', keyboardContainer.innerHTML)
 
+}
+
+const resetGame = () => {
+  window.localStorage.removeItem("boardContainer");
+  window.localStorage.removeItem("keyboardContainer");
+  window.localStorage.removeItem("currentRow");
 }
 
 const addLetter = (letter) => {
@@ -191,7 +203,7 @@ const addLetter = (letter) => {
 };
 
 const deleteLetter = () => {
-  if (currentTile > 0 && !isGameOver) {
+  if (currentTile > 0 && !isGameOver && !checkingRow) {
     currentTile--;
     const tile = document.getElementById(
       "guessRow-" + currentRow + "-tile-" + currentTile
@@ -205,20 +217,37 @@ const deleteLetter = () => {
 const checkRow = () => {
   const guess = guessRows[currentRow].join("");
 
-  if (currentTile > 4) {
+  if (currentTile > 4 && !checkingRow) {
     console.log("guess is", guess + " wordle is " + wordle);
     flipTile();
-    localStorage.setItem('currentTile', currentTile)
+    checkingRow = true
+    // localStorage.setItem('currentTile', currentTile)
 
     if (wordle === guess) {
+
+      const totalWins = window.localStorage.getItem("totalWins") || 0;
+      window.localStorage.setItem("totalWins", Number(totalWins) + 1);
+
+      const currentStreak = window.localStorage.getItem("currentStreak") || 0;
+      window.localStorage.setItem("currentStreak", Number(currentStreak) + 1);
+      const maxStreak = window.localStorage.getItem("maxStreak") || 0;
+      if(currentStreak >= maxStreak) {
+        window.localStorage.setItem("maxStreak", Number(maxStreak) + 1);
+      }
+
+      updateTotal()
+      updateStats()
+      showStats()
 
       if (currentRow === 0) {
         setTimeout(() => {
           showMessage("genius");
           isGameOver = true;
           jumpTile();
+          resetGame();
         }, 2400);
         updateWordIndex()
+        
         return;
       }
       if (currentRow === 1) {
@@ -226,6 +255,7 @@ const checkRow = () => {
           showMessage("magnificent");
           isGameOver = true;
           jumpTile();
+          resetGame();
         }, 2400);
         updateWordIndex()
         return;
@@ -235,6 +265,7 @@ const checkRow = () => {
           showMessage("impressive");
           isGameOver = true;
           jumpTile();
+          resetGame();
         }, 2400);
         updateWordIndex()
         return;
@@ -244,6 +275,7 @@ const checkRow = () => {
           showMessage("splendid");
           isGameOver = true;
           jumpTile();
+          resetGame();
         }, 2400);
         updateWordIndex()
         return;
@@ -253,6 +285,7 @@ const checkRow = () => {
           showMessage("great");
           isGameOver = true;
           jumpTile();
+          resetGame();
         }, 2400);
         updateWordIndex()
         return;
@@ -262,6 +295,7 @@ const checkRow = () => {
           showMessage("phew");
           isGameOver = true;
           jumpTile();
+          resetGame();
         }, 2400);
         updateWordIndex()
         return;
@@ -271,21 +305,31 @@ const checkRow = () => {
         setTimeout(() => {
           showMessage(`${wordle}`);
           isGameOver = true;
+          resetGame()
         }, 2400);
         updateWordIndex()
+        window.localStorage.setItem("currentStreak", 0)
+        updateTotal()
+        updateStats()
+        showStats()
         return;
       }
       if (currentRow < 5) {
         setTimeout(() => {
         currentRow++;
         window.localStorage.setItem('currentRow', currentRow)
-        currentTile = 0;}, 2400)
+        currentTile = 0;
+        checkingRow = false;
+        }, 2400)
         
       }
     }
   } else {
+    if(!checkingRow) {
     showMessage("Not enough letters");
-    shakeTile();
+    shakeTile()
+    return;
+    }
   }
 };
 
@@ -355,3 +399,36 @@ const jumpTile = () => {
         }, 250 * index);
       });
 };
+
+const updateTotal = () => {
+  const totalGames = window.localStorage.getItem("totalGames") || 0
+  window.localStorage.setItem("totalGames", Number(totalGames) + 1)
+}
+
+const updateStats = () => {
+  const currentStreak = window.localStorage.getItem("currentStreak") || 0
+  const totalGames = window.localStorage.getItem("totalGames") || 0
+  const totalWins = window.localStorage.getItem("totalWins") 
+  const maxStreak = window.localStorage.getItem("maxStreak") || 0
+
+  document.getElementById("totalPlayed").textContent = totalGames;
+  document.getElementById("currentStreak").textContent = currentStreak;
+  document.getElementById("bestStreak").textContent = maxStreak
+
+  const winPct = Math.round((totalWins / totalGames) * 100) || 0;
+  document.getElementById("winPct").textContent = winPct
+  
+}
+updateStats()
+
+const showStats = () => {
+  setTimeout(() => {
+    const stats = new bootstrap.Modal(document.getElementById('stats'), {});
+    stats.show();
+  }, 3500)
+}
+
+
+
+
+
