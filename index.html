@@ -62,7 +62,7 @@
         aria-labelledby="howToPlayLabel"
         aria-hidden="true"
       >
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content bg-modal">
             <div class="modal-header">
               <h1
@@ -95,22 +95,58 @@
                   mostrar o quão perto foi seu palpite da palavra certa.
                 </p>
               </div>
-              <hr/>
+              <hr />
 
               <strong>Exemplos</strong>
-              <p>bla bla</p>
-            </div>
-            <div class="modal-footer">
-              <button
-                type="button"
-                class="btn btn-secondary"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" class="btn btn-primary">
-                Save changes
-              </button>
+              <div class="example-row">
+                <div class="ex-square green-overlay ex-flip">T</div>
+                <div class="ex-square">U</div>
+                <div class="ex-square">R</div>
+                <div class="ex-square">M</div>
+                <div class="ex-square">A</div>
+              </div>
+              <p>
+                A letra
+                <strong>T</strong>
+                faz parte da palavra e está na posição correta.
+              </p>
+
+              <div class="example-row">
+                <div class="ex-square">V</div>
+                <div class="ex-square">I</div>
+                <div class="ex-square yellow-overlay ex-flip">O</div>
+                <div class="ex-square">L</div>
+                <div class="ex-square">A</div>
+              </div>
+              <p>
+                A letra
+                <strong>O</strong>
+                faz parte da palavra, mas em outra posição.
+              </p>
+
+              <div class="example-row">
+                <div class="ex-square">P</div>
+                <div class="ex-square">U</div>
+                <div class="ex-square">L</div>
+                <div class="ex-square grey-overlay ex-flip">G</div>
+                <div class="ex-square">A</div>
+              </div>
+              <p>
+                A letra
+                <strong>G</strong>
+                não faz parte da palavra.
+              </p>
+              <br />
+              <p>Acentos não são considerados.</p>
+              <p>As palabras podem possuir letras repetidas.</p>
+
+              <hr />
+              <div class="d-flex justify-content-center align-content-center">
+                <strong
+                  >Uma nova palavra é disponível depois do fim de cada
+                  partida.</strong
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -260,6 +296,7 @@
       integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
       crossorigin="anonymous"
     ></script>
+    <script src="js/wordList.js"></script>
     <script src="js/main.js"></script>
   </body>
 </html>

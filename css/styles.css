@@ -53,6 +53,33 @@ body {
 
 }
 
+.example-row {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    display: flex;
+    width: 50%;
+    font-weight: 800;
+}
+
+.ex-square {
+    width: 25%;
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    border: 1px solid #1a1a1b;
+    border-radius: 8px;
+    background-color: #121213 ;
+    box-shadow: 0 4px 23px 0 rgb(0 0 0 / 20%);
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.ex-flip {
+    animation: 0.5s linear flipping;
+}
+
 .stats-modal {
     display: grid;
     grid-template-rows: repeat(2, 1fr);
