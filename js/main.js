@@ -98,16 +98,13 @@ const handleClick = () => {
   for (let i = 0; i < clicks.length; i++) {
     clicks[i].addEventListener("click", ({ target }) => {
       const letter = target.getAttribute("id");
-      console.log("clicked", letter);
 
       if (letter === "<<") {
         deleteLetter();
-        // console.log("guessRows", guessRows);
         return;
       }
       if (letter === "Enter") {
         checkRow();
-        // console.log("guessRows", guessRows);
         return;
       }
       addLetter(letter);
@@ -118,20 +115,17 @@ const handleClick = () => {
 const handleKeypress = () => {
   document.addEventListener("keydown", (e) => {
     const letter = e.key;
-    console.log("clicked", e.key);
 
     const lettersPattern = /[a-z]/;
     lettersPattern.test(letter);
 
     if (letter === "Enter") {
       checkRow();
-      console.log("guessRows", guessRows);
       return;
     }
 
     if (letter === "Backspace") {
       deleteLetter();
-      console.log("guessRows", guessRows);
       return;
     } else {
       if (lettersPattern.test(letter) && letter.length === 1) {
@@ -213,7 +207,6 @@ const addLetter = (letter) => {
     guessRows[currentRow][currentTile] = letter;
     tile.setAttribute("data", letter);
     currentTile++;
-    console.log("guessRows", guessRows);
   }
 };
 
@@ -238,10 +231,8 @@ const checkRow = () => {
     return;
   } else {
     if (currentTile > 4 && !checkingRow) {
-      console.log("guess is", guess + " wordle is " + wordle);
       flipTile();
       checkingRow = true;
-      // localStorage.setItem('currentTile', currentTile)
 
       if (wordle === guess) {
         const totalWins = window.localStorage.getItem("totalWins") || 0;

@@ -54,8 +54,8 @@ body {
 }
 
 .example-row {
-    margin-top: 24px;
-    margin-bottom: 24px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     display: flex;
     width: 50%;
     font-weight: 800;
@@ -110,7 +110,7 @@ body {
     margin-right: 1em;
 }
 
-.stats-progress {
+/* .stats-progress {
     width: 85%;
     margin: 0 auto 1em auto;
     display: grid;
@@ -131,7 +131,7 @@ body {
     box-sizing: border-box;
     padding: 0 0.75em;
     text-align: right;
-}
+} */
 
 h2 {
     margin: 0.5em 0 0 0;
@@ -146,6 +146,26 @@ p {
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
+}
+
+.config-modal {
+    font-size: 19px;
+    width: 90%;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.config-modal hr{
+    margin-top: -5px;
+}
+
+a {
+    color: #818384;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #ebe;
 }
 
 
